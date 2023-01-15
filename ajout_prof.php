@@ -1,8 +1,8 @@
 <?php
 session_start();
 include('cadre.php');
-mysqli_connect("localhost", "root", "root");
-$link =mysqli_connect("localhost", "root", "root");
+mysqli_connect("localhost", "root", "");
+$link =mysqli_connect("localhost", "root", "");
 mysqli_select_db($link,"gestion");
 ?>
 <html>
@@ -18,6 +18,7 @@ $adresse=addslashes(Nl2br(Htmlspecialchars($_POST['adresse'])));
 $telephone=$_POST['telephone'];
 $pseudo=$_POST['pseudo'];
 $passe=$_POST['passe'];
+$type=$_POST['type'];
 $compte=mysqli_fetch_array(mysqli_query($link,"select count(*) as nb from prof where nom='$nom' and prenom='$prenom'"));// pour ne pas ajouter deux profs similaires
 if($compte['nb']>0){
 ?>
@@ -29,7 +30,8 @@ mysqli_query($link,"insert into prof(nom,prenom,adresse,telephone) values('$nom'
 	/*		Ajouter le num dans le login    */
 $numprof=mysqli_fetch_array(mysqli_query($link,"select numprof from prof where nom='$nom' and prenom='$prenom'"));
 $num=$numprof['numprof'];
-mysqli_query($link,"insert into login(Num,pseudo,passe,type) values('$num','$pseudo','$passe','prof')");
+
+mysqli_query($link,"insert into login(Num,pseudo,passe,type) values('$num','$pseudo','$passe','$type')");
 ?><SCRIPT LANGUAGE="Javascript">alert("Insertion avec succ�s!");</SCRIPT>
 <?php
 }
@@ -44,17 +46,19 @@ echo '<br/><a href="ajout_prof.php">Revenir � la page pr�c�dente !</a>';
 else {
  ?>
  <form action="ajout_prof.php" method="POST" class="formulaire">
- Nom           :         <input type="text" name="nom"><br/>
+ Nom   d         :         <input type="text" name="nom"><br/>
  Prenom      :         <input type="text" name="prenom"><br/>
  Adresse     :          <textarea name="adresse"> </textarea><br/>
  Telephone  :       <input type="text" name="telephone"> <br/>
  Pseudo        :      <input type="text" name="pseudo"> <br/>
  Password     :       <input type="password" name="passe"> <br/>
+          <input type="hidden" name="type" value="prof"> <br/>
 <center><input type="image" src="button.png"></center>
 </form>
 <?php
 }
 ?>
+
 </pre></center>
 </div>
 </html>
